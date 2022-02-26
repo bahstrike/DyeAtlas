@@ -47,6 +47,10 @@ namespace DyeAtlas
 
             resolution.SelectedIndex = 1;// 256x256
 
+            // nothing is loaded yet, so nothing can be saved
+            savePNGButton.Enabled = false;
+            savePNTButton.Enabled = false;
+
             // load settings
             mypaintings.Text = Properties.Settings.Default.MyPaintings;
         }
@@ -74,11 +78,6 @@ namespace DyeAtlas
             e.Effect = DragDropEffects.Link;
         }
 
-        public static bool IsFilePNT(string file)
-        {
-            return Path.GetExtension(file).Equals(".pnt", StringComparison.InvariantCultureIgnoreCase);
-        }
-
         public void SaveFile(string file)
         {
             try
@@ -87,7 +86,7 @@ namespace DyeAtlas
                 if (bmp == null)
                     return;
 
-                if(IsFilePNT(file))
+                if(Path.GetExtension(file).Equals(".pnt", StringComparison.InvariantCultureIgnoreCase))//IsFilePNT(file))
                 {
                     PNTImage pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
 
@@ -128,60 +127,83 @@ namespace DyeAtlas
 
             try
             {
-                PNTImage pnt;
-                if (IsFilePNT(file))
+
+                PNTImage pnt = null;
+
+                switch (Path.GetExtension(file).ToLowerInvariant())
                 {
-                    pnt = PNTImage.LoadPNT(file);
+                    case ".pnt":
+                        pnt = PNTImage.LoadPNT(file);
 
-                    // autoselect resolution
-                    if (pnt.width >= 256)
-                        resolution.SelectedIndex = 1;//256x256
-                    else
-                        resolution.SelectedIndex = 0;//128x128   (shrug)
+                        // autoselect resolution
+                        if (pnt.width >= 256)
+                            resolution.SelectedIndex = 1;//256x256
+                        else
+                            resolution.SelectedIndex = 0;//128x128   (shrug)
+                        break;
 
-                }
-                else
-                {
-                    Bitmap bmp = (Bitmap)Bitmap.FromFile(file);
-
-                    // powers-of-2 automatic rescale
-                    int newWidth = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Width) / Math.Log(2.0)));
-                    int newHeight = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Height) / Math.Log(2.0)));
-
-                    // clamp to allowable export dimensions (assumed power-of-2)
-                    newWidth = Math.Min(ExportDimensions.Width, newWidth);
-                    newHeight = Math.Min(ExportDimensions.Height, newHeight);
-
-                    // hold onto yerr hats, its time to rescale!
-                    if (newWidth != bmp.Width || newHeight != bmp.Height)
-                    {
-                        Bitmap newBmp = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
-                        newBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
-
-                        using (Graphics gfx = Graphics.FromImage(newBmp))
+                    case ".bmp":
+                    case ".png":
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".gif":
+                    case ".tga":
+                    case ".tiff":
                         {
-                            gfx.CompositingMode = CompositingMode.SourceCopy;
-                            gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
-                            gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                            Bitmap bmp = (Bitmap)Bitmap.FromFile(file);
 
-                            using (ImageAttributes wrapMode = new ImageAttributes())
+                            // powers-of-2 automatic rescale
+                            int newWidth = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Width) / Math.Log(2.0)));
+                            int newHeight = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Height) / Math.Log(2.0)));
+
+                            // clamp to allowable export dimensions (assumed power-of-2)
+                            newWidth = Math.Min(ExportDimensions.Width, newWidth);
+                            newHeight = Math.Min(ExportDimensions.Height, newHeight);
+
+                            // hold onto yerr hats, its time to rescale!
+                            if (newWidth != bmp.Width || newHeight != bmp.Height)
                             {
-                                wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                                gfx.DrawImage(bmp, new Rectangle(0, 0, newWidth, newHeight), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrapMode);
+                                Bitmap newBmp = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
+                                newBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
+
+                                using (Graphics gfx = Graphics.FromImage(newBmp))
+                                {
+                                    gfx.CompositingMode = CompositingMode.SourceCopy;
+                                    gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
+                                    gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                                    using (ImageAttributes wrapMode = new ImageAttributes())
+                                    {
+                                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                                        gfx.DrawImage(bmp, new Rectangle(0, 0, newWidth, newHeight), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrapMode);
+                                    }
+                                }
+
+                                bmp.Dispose();
+                                bmp = newBmp;
                             }
+
+                            pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
                         }
+                        break;
+                }
 
-                        bmp.Dispose();
-                        bmp = newBmp;
-                    }
-
-                    pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
+                if(pnt == null)
+                {
+                    // should we scold idiots? for dragging bad files
+                    //Messagebo
+                    return;
                 }
 
                 currentfile.Text = file;
                 resolution.Text = $"{pnt.width}x{pnt.height}";
 
                 preview.Image = pnt.GenerateBitmap();
+
+
+                // we got stuff, we could save
+                savePNTButton.Enabled = true;
+                savePNGButton.Enabled = true;
             }
             catch(Exception e)
             {
@@ -269,6 +291,24 @@ namespace DyeAtlas
         private void resolution_TextChanged(object sender, EventArgs e)
         {
             OpenFile(currentfile.Text);
+        }
+
+        private void mypaintingsbrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fld = new FolderBrowserDialog();
+
+            fld.SelectedPath = mypaintings.Text;
+            fld.Description = @"This is usually like:   [ATLAS install]\ShooterGame\Saved\MyPaintings";
+
+            if (fld.ShowDialog() != DialogResult.OK)
+                return;
+
+            mypaintings.Text = fld.SelectedPath;
+        }
+
+        private void openfolder_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer", mypaintings.Text);
         }
     }
 }

@@ -39,6 +39,7 @@
             this.mypaintingsbrowse = new System.Windows.Forms.Button();
             this.currentfile = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.openfolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,7 +85,7 @@
             this.savePNTButton.Name = "savePNTButton";
             this.savePNTButton.Size = new System.Drawing.Size(100, 50);
             this.savePNTButton.TabIndex = 4;
-            this.savePNTButton.Text = "Save .PNT";
+            this.savePNTButton.Text = "Save .PNT\r\n(atlas)";
             this.savePNTButton.UseVisualStyleBackColor = true;
             this.savePNTButton.Click += new System.EventHandler(this.savePNTButton_Click);
             // 
@@ -94,7 +95,7 @@
             this.savePNGButton.Name = "savePNGButton";
             this.savePNGButton.Size = new System.Drawing.Size(100, 50);
             this.savePNGButton.TabIndex = 5;
-            this.savePNGButton.Text = "Save .PNG";
+            this.savePNGButton.Text = "Save .PNG\r\n(pc)";
             this.savePNGButton.UseVisualStyleBackColor = true;
             this.savePNGButton.Click += new System.EventHandler(this.savePNGButton_Click);
             // 
@@ -107,7 +108,7 @@
             "256x256"});
             this.resolution.Location = new System.Drawing.Point(330, 51);
             this.resolution.Name = "resolution";
-            this.resolution.Size = new System.Drawing.Size(97, 21);
+            this.resolution.Size = new System.Drawing.Size(80, 21);
             this.resolution.TabIndex = 6;
             this.resolution.TextChanged += new System.EventHandler(this.resolution_TextChanged);
             // 
@@ -138,6 +139,7 @@
             this.mypaintingsbrowse.TabIndex = 9;
             this.mypaintingsbrowse.Text = "...";
             this.mypaintingsbrowse.UseVisualStyleBackColor = true;
+            this.mypaintingsbrowse.Click += new System.EventHandler(this.mypaintingsbrowse_Click);
             // 
             // currentfile
             // 
@@ -158,12 +160,24 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Current File:";
             // 
+            // openfolder
+            // 
+            this.openfolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.openfolder.Location = new System.Drawing.Point(416, 52);
+            this.openfolder.Name = "openfolder";
+            this.openfolder.Size = new System.Drawing.Size(46, 20);
+            this.openfolder.TabIndex = 12;
+            this.openfolder.Text = "folder";
+            this.openfolder.UseVisualStyleBackColor = true;
+            this.openfolder.Click += new System.EventHandler(this.openfolder_Click);
+            // 
             // DyeAtlas
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 487);
+            this.Controls.Add(this.openfolder);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.currentfile);
             this.Controls.Add(this.mypaintingsbrowse);
@@ -200,6 +214,7 @@
         private System.Windows.Forms.Button mypaintingsbrowse;
         private System.Windows.Forms.TextBox currentfile;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button openfolder;
     }
 }
 

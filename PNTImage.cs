@@ -79,7 +79,8 @@ namespace DyeAtlas
 
         public static PNTImage LoadPNT(string file)
         {
-            using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
+            using (Stream fs = File.OpenRead(file))
+            using (BinaryReader br = new BinaryReader(fs))
             {
                 PNTImage pnt = new PNTImage();
                 pnt.version = br.ReadUInt32();
@@ -96,7 +97,8 @@ namespace DyeAtlas
 
         public void Save(string file)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Create(file)))
+            using(Stream fs = File.Create(file))
+            using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 bw.Write(version);
                 bw.Write(width);
