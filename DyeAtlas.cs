@@ -233,6 +233,10 @@ namespace DyeAtlas
 
             sfd.Filter = "Paint File (*.pnt)|*.pnt|All Files (*.*)|*.*";
 
+
+            // default some save filename
+            sfd.FileName = Path.GetFileNameWithoutExtension(currentfile.Text) + ".pnt";
+
             if (sfd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -252,6 +256,9 @@ namespace DyeAtlas
 
             sfd.RestoreDirectory = true;// if we are exporting image to desktop or whatever then we should not mess with open file
             sfd.Filter = "PNG File (*.png)|*.png|Image Files (*.png;*.bmp;*.jpg)|*.png;*.bmp;*.jpg|All Files (*.*)|*.*";
+
+            // default some save filename
+            sfd.FileName = Path.GetFileNameWithoutExtension(currentfile.Text) + ".png";
 
             if (sfd.ShowDialog() != DialogResult.OK)
                 return;
