@@ -34,7 +34,7 @@ namespace DyeAtlas
 
         public static Palette palette;// defer loading until form load..  make sure config files are nice
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void DyeAtlas_Load(object sender, EventArgs e)
         {
             palette = LoadPalette();
 
@@ -46,6 +46,24 @@ namespace DyeAtlas
             preview.BackgroundImage = bk;
 
             resolution.SelectedIndex = 1;// 256x256
+
+            // load settings
+            mypaintings.Text = Properties.Settings.Default.MyPaintings;
+        }
+
+        private void DyeAtlas_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // save settings
+            Properties.Settings.Default.MyPaintings = mypaintings.Text;
+        }
+
+        // convenience
+        public string MyPaintingsPath
+        {
+            get
+            {
+                return mypaintings.Text;
+            }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
@@ -85,8 +103,6 @@ namespace DyeAtlas
                 MessageBox.Show(e.Message);
             }
         }
-
-        public string lastOpenedFile = null;
 
         public Size ExportDimensions
         {
@@ -162,7 +178,7 @@ namespace DyeAtlas
                     pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
                 }
 
-                lastOpenedFile = file;
+                currentfile.Text = file;
                 resolution.Text = $"{pnt.width}x{pnt.height}";
 
                 preview.Image = pnt.GenerateBitmap();
@@ -188,6 +204,9 @@ namespace DyeAtlas
         {
             OpenFileDialog ofd = new OpenFileDialog();
 
+            if (Directory.Exists(MyPaintingsPath))
+                ofd.InitialDirectory = MyPaintingsPath;
+
             ofd.Filter = "Compatible Files (*.pnt;*.png;*.bmp;*.jpg)|*.pnt;*.png;*.bmp;*.jpg|Paint Files (*.pnt)|*.pnt|Image Files (*.png;*.bmp;*.jpg)|*.png;*.bmp;*.jpg|All Files (*.*)|*.*";
 
             if (ofd.ShowDialog() != DialogResult.OK)
@@ -198,7 +217,7 @@ namespace DyeAtlas
 
         private void dithering_CheckedChanged(object sender, EventArgs e)
         {
-            OpenFile(lastOpenedFile);
+            OpenFile(currentfile.Text);
         }
 
         private void savePNTButton_Click(object sender, EventArgs e)
@@ -208,6 +227,9 @@ namespace DyeAtlas
                 return;
 
             SaveFileDialog sfd = new SaveFileDialog();
+
+            if (Directory.Exists(MyPaintingsPath))
+                sfd.InitialDirectory = MyPaintingsPath;
 
             sfd.Filter = "Paint File (*.pnt)|*.pnt|All Files (*.*)|*.*";
 
@@ -225,6 +247,9 @@ namespace DyeAtlas
 
             SaveFileDialog sfd = new SaveFileDialog();
 
+            if (Directory.Exists(MyPaintingsPath))
+                sfd.InitialDirectory = MyPaintingsPath;
+
             sfd.RestoreDirectory = true;// if we are exporting image to desktop or whatever then we should not mess with open file
             sfd.Filter = "PNG File (*.png)|*.png|Image Files (*.png;*.bmp;*.jpg)|*.png;*.bmp;*.jpg|All Files (*.*)|*.*";
 
@@ -236,7 +261,7 @@ namespace DyeAtlas
 
         private void resolution_TextChanged(object sender, EventArgs e)
         {
-            OpenFile(lastOpenedFile);
+            OpenFile(currentfile.Text);
         }
     }
 }

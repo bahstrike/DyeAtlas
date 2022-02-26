@@ -16,7 +16,10 @@ namespace DyeAtlas
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             Application.Run(new DyeAtlas());
+
+            Properties.Settings.Default.Save();
         }
     }
 }
