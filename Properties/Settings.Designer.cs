@@ -34,5 +34,17 @@ namespace DyeAtlas.Properties {
                 this["MyPaintings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int GameType {
+            get {
+                return ((int)(this["GameType"]));
+            }
+            set {
+                this["GameType"] = value;
+            }
+        }
     }
 }

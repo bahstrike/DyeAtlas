@@ -11,6 +11,8 @@ namespace DyeAtlas
 {
     public class PNTImage
     {
+        public readonly Palette palette;
+
         public uint version;
         public int width;
         public int height;
@@ -19,9 +21,14 @@ namespace DyeAtlas
 
         public byte[] bits;
 
-        public static PNTImage GenerateFromBitmap(Bitmap bmp, bool dither)
+        public PNTImage(Palette _palette)
         {
-            PNTImage pnt = new PNTImage();
+            palette = _palette;
+        }
+
+        public static PNTImage GenerateFromBitmap(Palette pal, Bitmap bmp, bool dither)
+        {
+            PNTImage pnt = new PNTImage(pal);
             pnt.version = 1;
             pnt.width = bmp.Width;
             pnt.height = bmp.Height;
@@ -77,12 +84,12 @@ namespace DyeAtlas
             bmp.SetPixel(x, y, clr + error);
         }
 
-        public static PNTImage LoadPNT(string file)
+        public static PNTImage LoadPNT(Palette pal, string file)
         {
             using (Stream fs = File.OpenRead(file))
             using (BinaryReader br = new BinaryReader(fs))
             {
-                PNTImage pnt = new PNTImage();
+                PNTImage pnt = new PNTImage(pal);
                 pnt.version = br.ReadUInt32();
                 pnt.width = br.ReadInt32();
                 pnt.height = br.ReadInt32();
@@ -115,7 +122,7 @@ namespace DyeAtlas
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return null;
 
-            return DyeAtlas.palette.Get(bits[x + y * width]);
+            return palette.Get(bits[x + y * width]);
         }
 
         public void SetPixel(int x, int y, Color clr)
@@ -123,7 +130,7 @@ namespace DyeAtlas
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
 
-            bits[x + y * width] = (byte)DyeAtlas.palette.FindClosestIndex(clr);
+            bits[x + y * width] = (byte)palette.FindClosestIndex(clr);
         }
 
         public Bitmap GenerateBitmap()
@@ -133,7 +140,7 @@ namespace DyeAtlas
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
                 {
-                    bmp.SetPixel(x, y, DyeAtlas.palette.Get(bits[x + y * width]) ?? Color.FromArgb(0, 0, 0, 0));
+                    bmp.SetPixel(x, y, palette.Get(bits[x + y * width]) ?? Color.FromArgb(0, 0, 0, 0));
                 }
 
             return bmp;

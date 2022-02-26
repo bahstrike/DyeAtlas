@@ -40,6 +40,7 @@
             this.currentfile = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.openfolder = new System.Windows.Forms.Button();
+            this.gamechoice = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,9 +50,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.preview.Location = new System.Drawing.Point(12, 155);
+            this.preview.Location = new System.Drawing.Point(12, 168);
             this.preview.Name = "preview";
-            this.preview.Size = new System.Drawing.Size(450, 320);
+            this.preview.Size = new System.Drawing.Size(450, 381);
             this.preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.preview.TabIndex = 0;
             this.preview.TabStop = false;
@@ -61,7 +62,7 @@
             this.dithering.AutoSize = true;
             this.dithering.Checked = true;
             this.dithering.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dithering.Location = new System.Drawing.Point(333, 84);
+            this.dithering.Location = new System.Drawing.Point(333, 97);
             this.dithering.Name = "dithering";
             this.dithering.Size = new System.Drawing.Size(66, 17);
             this.dithering.TabIndex = 2;
@@ -71,7 +72,7 @@
             // 
             // openButton
             // 
-            this.openButton.Location = new System.Drawing.Point(12, 51);
+            this.openButton.Location = new System.Drawing.Point(12, 64);
             this.openButton.Name = "openButton";
             this.openButton.Size = new System.Drawing.Size(100, 50);
             this.openButton.TabIndex = 3;
@@ -81,17 +82,17 @@
             // 
             // savePNTButton
             // 
-            this.savePNTButton.Location = new System.Drawing.Point(118, 51);
+            this.savePNTButton.Location = new System.Drawing.Point(118, 64);
             this.savePNTButton.Name = "savePNTButton";
             this.savePNTButton.Size = new System.Drawing.Size(100, 50);
             this.savePNTButton.TabIndex = 4;
-            this.savePNTButton.Text = "Save .PNT\r\n(atlas)";
+            this.savePNTButton.Text = "Save .PNT\r\n(game)";
             this.savePNTButton.UseVisualStyleBackColor = true;
             this.savePNTButton.Click += new System.EventHandler(this.savePNTButton_Click);
             // 
             // savePNGButton
             // 
-            this.savePNGButton.Location = new System.Drawing.Point(224, 51);
+            this.savePNGButton.Location = new System.Drawing.Point(224, 64);
             this.savePNGButton.Name = "savePNGButton";
             this.savePNGButton.Size = new System.Drawing.Size(100, 50);
             this.savePNGButton.TabIndex = 5;
@@ -106,7 +107,7 @@
             this.resolution.Items.AddRange(new object[] {
             "128x128",
             "256x256"});
-            this.resolution.Location = new System.Drawing.Point(330, 51);
+            this.resolution.Location = new System.Drawing.Point(330, 64);
             this.resolution.Name = "resolution";
             this.resolution.Size = new System.Drawing.Size(80, 21);
             this.resolution.TabIndex = 6;
@@ -116,7 +117,7 @@
             // 
             this.mypaintings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.mypaintings.Location = new System.Drawing.Point(15, 25);
+            this.mypaintings.Location = new System.Drawing.Point(12, 38);
             this.mypaintings.Name = "mypaintings";
             this.mypaintings.Size = new System.Drawing.Size(412, 20);
             this.mypaintings.TabIndex = 7;
@@ -124,16 +125,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(70, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
+            this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Atlas MyPaintings Path:";
+            this.label1.Text = "MyPaintings Path:";
             // 
             // mypaintingsbrowse
             // 
             this.mypaintingsbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.mypaintingsbrowse.Location = new System.Drawing.Point(433, 25);
+            this.mypaintingsbrowse.Location = new System.Drawing.Point(430, 38);
             this.mypaintingsbrowse.Name = "mypaintingsbrowse";
             this.mypaintingsbrowse.Size = new System.Drawing.Size(29, 20);
             this.mypaintingsbrowse.TabIndex = 9;
@@ -145,7 +146,7 @@
             // 
             this.currentfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.currentfile.Location = new System.Drawing.Point(12, 129);
+            this.currentfile.Location = new System.Drawing.Point(12, 142);
             this.currentfile.Name = "currentfile";
             this.currentfile.ReadOnly = true;
             this.currentfile.Size = new System.Drawing.Size(450, 20);
@@ -154,7 +155,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 113);
+            this.label2.Location = new System.Drawing.Point(12, 126);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 13);
             this.label2.TabIndex = 11;
@@ -163,7 +164,7 @@
             // openfolder
             // 
             this.openfolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.openfolder.Location = new System.Drawing.Point(416, 52);
+            this.openfolder.Location = new System.Drawing.Point(413, 65);
             this.openfolder.Name = "openfolder";
             this.openfolder.Size = new System.Drawing.Size(46, 20);
             this.openfolder.TabIndex = 12;
@@ -171,12 +172,26 @@
             this.openfolder.UseVisualStyleBackColor = true;
             this.openfolder.Click += new System.EventHandler(this.openfolder_Click);
             // 
+            // gamechoice
+            // 
+            this.gamechoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gamechoice.FormattingEnabled = true;
+            this.gamechoice.Items.AddRange(new object[] {
+            "Ark",
+            "Atlas"});
+            this.gamechoice.Location = new System.Drawing.Point(12, 12);
+            this.gamechoice.Name = "gamechoice";
+            this.gamechoice.Size = new System.Drawing.Size(52, 21);
+            this.gamechoice.TabIndex = 13;
+            this.gamechoice.SelectedIndexChanged += new System.EventHandler(this.gamechoice_SelectedIndexChanged);
+            // 
             // DyeAtlas
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(474, 487);
+            this.ClientSize = new System.Drawing.Size(474, 561);
+            this.Controls.Add(this.gamechoice);
             this.Controls.Add(this.openfolder);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.currentfile);
@@ -215,6 +230,7 @@
         private System.Windows.Forms.TextBox currentfile;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button openfolder;
+        private System.Windows.Forms.ComboBox gamechoice;
     }
 }
 

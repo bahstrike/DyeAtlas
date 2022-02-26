@@ -38,13 +38,27 @@ namespace DyeAtlas
             return pal;
         }
 
-        public static Palette palette;// defer loading until form load..  make sure config files are nice
+        private Palette _palette = null;
+        public Palette palette
+        {
+            get
+            {
+                if(_palette == null)
+                {
+                    _palette = LoadPalette((GameType)gamechoice.SelectedIndex);// should be ok to cast.. only 2 options lol
+                }
+
+                return _palette;
+            }
+
+            set
+            {
+                _palette = value;
+            }
+        }
 
         private void DyeAtlas_Load(object sender, EventArgs e)
         {
-            MessageBox.Show("need a dropdown for gametype");
-            palette = LoadPalette(GameType.Ark);
-
             Bitmap bk = new Bitmap(preview.Width, preview.Height);
             using (Graphics gfx = Graphics.FromImage(bk))
             {
@@ -59,12 +73,14 @@ namespace DyeAtlas
             savePNTButton.Enabled = false;
 
             // load settings
+            gamechoice.SelectedIndex = Properties.Settings.Default.GameType;
             mypaintings.Text = Properties.Settings.Default.MyPaintings;
         }
 
         private void DyeAtlas_FormClosed(object sender, FormClosedEventArgs e)
         {
             // save settings
+            Properties.Settings.Default.GameType = gamechoice.SelectedIndex;
             Properties.Settings.Default.MyPaintings = mypaintings.Text;
         }
 
@@ -95,7 +111,7 @@ namespace DyeAtlas
 
                 if(Path.GetExtension(file).Equals(".pnt", StringComparison.InvariantCultureIgnoreCase))//IsFilePNT(file))
                 {
-                    PNTImage pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
+                    PNTImage pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked);
 
                     pnt.Save(file);
                 }else
@@ -140,7 +156,7 @@ namespace DyeAtlas
                 switch (Path.GetExtension(file).ToLowerInvariant())
                 {
                     case ".pnt":
-                        pnt = PNTImage.LoadPNT(file);
+                        pnt = PNTImage.LoadPNT(palette, file);
 
                         // autoselect resolution
                         if (pnt.width >= 256)
@@ -190,7 +206,7 @@ namespace DyeAtlas
                                 bmp = newBmp;
                             }
 
-                            pnt = PNTImage.GenerateFromBitmap(bmp, dithering.Checked);
+                            pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked);
                         }
                         break;
                 }
@@ -305,7 +321,7 @@ namespace DyeAtlas
             FolderBrowserDialog fld = new FolderBrowserDialog();
 
             fld.SelectedPath = mypaintings.Text;
-            fld.Description = @"This is usually like:   [ATLAS install]\ShooterGame\Saved\MyPaintings";
+            fld.Description = @"This is usually like:   [GAME INSTALL]\ShooterGame\Saved\MyPaintings";
 
             if (fld.ShowDialog() != DialogResult.OK)
                 return;
@@ -315,7 +331,18 @@ namespace DyeAtlas
 
         private void openfolder_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(mypaintings.Text) || !Directory.Exists(mypaintings.Text))
+                return;
+
             System.Diagnostics.Process.Start("explorer", mypaintings.Text);
+        }
+
+        private void gamechoice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // invalidate palette
+            palette = null;
+
+            OpenFile(currentfile.Text);
         }
     }
 }
