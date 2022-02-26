@@ -21,9 +21,15 @@ namespace DyeAtlas
             InitializeComponent();
         }
 
-        public Palette LoadPalette()
+        public enum GameType
         {
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("DyeAtlas.palette.csv");
+            Ark,
+            Atlas
+        }
+
+        public Palette LoadPalette(GameType gt)
+        {
+            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DyeAtlas.palette_{gt.ToString().ToLowerInvariant()}.csv");
 
             Palette pal = Palette.LoadFromCSV(s);
 
@@ -36,7 +42,8 @@ namespace DyeAtlas
 
         private void DyeAtlas_Load(object sender, EventArgs e)
         {
-            palette = LoadPalette();
+            MessageBox.Show("need a dropdown for gametype");
+            palette = LoadPalette(GameType.Ark);
 
             Bitmap bk = new Bitmap(preview.Width, preview.Height);
             using (Graphics gfx = Graphics.FromImage(bk))
