@@ -24,29 +24,36 @@ namespace DyeAtlas
         void UpdateValues(bool reprocess=true)
         {
             // cheating with static values lol
-            Palette.HueImportance = /*baseline*/1.0 + (double)hueTrack.Value / (double)(hueTrack.Maximum - hueTrack.Minimum);
-            Palette.SaturationImportance = /*baseline*/1.0 + (double)satTrack.Value / (double)(satTrack.Maximum - satTrack.Minimum);
-            Palette.ValueImportance = /*baseline*/1.0 + (double)valTrack.Value / (double)(valTrack.Maximum - valTrack.Minimum);
+            Palette.HueImportance = (double)hueTrack.Value / (double)(hueTrack.Maximum - hueTrack.Minimum);
+            Palette.SaturationImportance = (double)satTrack.Value / (double)(satTrack.Maximum - satTrack.Minimum);
+            Palette.ValueImportance = (double)valTrack.Value / (double)(valTrack.Maximum - valTrack.Minimum);
 
 
 
             // update UI
-            hueLabel.Text = $"Hue: {(Palette.HueImportance * 100.0).ToString("0.0")}";
-            satLabel.Text = $"Saturation: {(Palette.SaturationImportance * 100.0).ToString("0.0")}";
-            valLabel.Text = $"Value: {(Palette.ValueImportance * 100.0).ToString("0.0")}";
-
+            hueLabel.Text = $"Hue Importance: {Palette.HueImportance.ToString("0.0")}";
+            satLabel.Text = $"Saturation Importance: {Palette.SaturationImportance.ToString("0.0")}";
+            valLabel.Text = $"Brightness Importance: {Palette.ValueImportance.ToString("0.0")}";
 
 
             // maybe reprocess
             if (reprocess)
+            {
+                Update();// flush before slow
+
                 dyeAtlas.Reprocess();
+            }
         }
+
+        public bool updating = false;
 
         private void HSVSlidersPopup_Load(object sender, EventArgs e)
         {
-            hueTrack.Value = (int)Math.Round((Palette.HueImportance - 1.0) * (double)(hueTrack.Maximum - hueTrack.Minimum));
-            satTrack.Value = (int)Math.Round((Palette.SaturationImportance - 1.0) * (double)(satTrack.Maximum - satTrack.Minimum));
-            valTrack.Value = (int)Math.Round((Palette.ValueImportance - 1.0) * (double)(valTrack.Maximum - valTrack.Minimum));
+            updating = true;
+            hueTrack.Value = (int)Math.Round((Palette.HueImportance) * (double)(hueTrack.Maximum - hueTrack.Minimum));
+            satTrack.Value = (int)Math.Round((Palette.SaturationImportance) * (double)(satTrack.Maximum - satTrack.Minimum));
+            valTrack.Value = (int)Math.Round((Palette.ValueImportance) * (double)(valTrack.Maximum - valTrack.Minimum));
+            updating = false;
 
 
             // just update labels
@@ -60,6 +67,25 @@ namespace DyeAtlas
 
         private void Track_Scroll(object sender, EventArgs e)
         {
+            UpdateValues(false);
+        }
+
+        private void Track_ValueChanged(object sender, EventArgs e)
+        {
+            if (updating)
+                return;
+
+            UpdateValues();
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            updating = true;
+            hueTrack.Value = 0;
+            satTrack.Value = 0;
+            valTrack.Value = 0;
+            updating = false;
+
             UpdateValues();
         }
     }
