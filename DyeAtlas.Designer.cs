@@ -42,6 +42,7 @@
             this.openfolder = new System.Windows.Forms.Button();
             this.gamechoice = new System.Windows.Forms.ComboBox();
             this.hsvcompare = new System.Windows.Forms.CheckBox();
+            this.hsvcompareButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -199,12 +200,23 @@
             this.hsvcompare.UseVisualStyleBackColor = true;
             this.hsvcompare.CheckedChanged += new System.EventHandler(this.hsvcompare_CheckedChanged);
             // 
+            // hsvcompareButton
+            // 
+            this.hsvcompareButton.Location = new System.Drawing.Point(432, 115);
+            this.hsvcompareButton.Name = "hsvcompareButton";
+            this.hsvcompareButton.Size = new System.Drawing.Size(30, 23);
+            this.hsvcompareButton.TabIndex = 15;
+            this.hsvcompareButton.Text = "...";
+            this.hsvcompareButton.UseVisualStyleBackColor = true;
+            this.hsvcompareButton.Click += new System.EventHandler(this.hsvcompareButton_Click);
+            // 
             // DyeAtlas
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 561);
+            this.Controls.Add(this.hsvcompareButton);
             this.Controls.Add(this.hsvcompare);
             this.Controls.Add(this.gamechoice);
             this.Controls.Add(this.openfolder);
@@ -247,6 +259,7 @@
         private System.Windows.Forms.Button openfolder;
         private System.Windows.Forms.ComboBox gamechoice;
         private System.Windows.Forms.CheckBox hsvcompare;
+        public System.Windows.Forms.Button hsvcompareButton;
     }
 }
 

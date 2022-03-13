@@ -413,5 +413,20 @@ namespace DyeAtlas
             }
         }
         #endregion
+
+        private void hsvcompareButton_Click(object sender, EventArgs e)
+        { 
+            HSVSlidersPopup popup = new HSVSlidersPopup(this);
+
+            // manual spawn location for dialog.. right next to button
+            popup.Location = PointToScreen(hsvcompareButton.Location + new Size(hsvcompareButton.Width, 0));
+
+
+            // kill the button;  it will re-enable when they close popup
+            hsvcompareButton.Enabled = false;
+
+            // non-modal;  let it live
+            popup.Show(this);
+        }
     }
 }

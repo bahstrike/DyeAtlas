@@ -79,13 +79,17 @@ namespace DyeAtlas
                     double valDiff = Math.Abs(aVal - bVal);
 
                     // weights
-                    hueDiff *= 1.0;
-                    satDiff *= 1.0;
-                    valDiff *= 1.0;
+                    hueDiff *= 1.5;
+                    satDiff *= 1.7;
+                    valDiff *= 1.4;
 
 
-                    //quantize, i guess
-                    diff = (int)Math.Round(hueDiff * 100.0) +
+                    // RGB compare;  seems to be a good baseline
+                    diff = Math.Abs(pe.color.R - clr.R) + Math.Abs(pe.color.G - clr.G) + Math.Abs(pe.color.B - clr.B);
+
+
+                    // influence with HSV diffs
+                    diff += (int)Math.Round(hueDiff * 100.0) +
                         (int)Math.Round(satDiff * 100.0) +
                         (int)Math.Round(valDiff * 100.0);
                 }
