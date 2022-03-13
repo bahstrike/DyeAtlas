@@ -21,10 +21,35 @@ namespace DyeAtlas
             InitializeComponent();
         }
 
-        private void HSVSlidersPopup_FormClosed(object sender, FormClosedEventArgs e)
+        void UpdateValues(bool reprocess=true)
         {
-            // re-enable popup button again
-            dyeAtlas.hsvcompareButton.Enabled = true;
+            // cheating with static values lol
+            Palette.HueImportance = /*baseline*/1.0 + (double)hueTrack.Value / (double)(hueTrack.Maximum - hueTrack.Minimum);
+
+
+
+            // update UI
+            hueLabel.Text = $"Hue: {(Palette.HueImportance * 100.0).ToString("0.0")}";
+
+
+
+            // maybe reprocess
+            if(reprocess)
+                dyeAtlas.Reprocess();
+        }
+
+        private void HSVSlidersPopup_Load(object sender, EventArgs e)
+        {
+            hueTrack.Value = (int)Math.Round((Palette.HueImportance - 1.0) * (double)(hueTrack.Maximum - hueTrack.Minimum));
+
+
+            // just update labels
+            UpdateValues(false);
+        }
+
+        private void hueTrack_Scroll(object sender, EventArgs e)
+        {
+            UpdateValues();
         }
     }
 }

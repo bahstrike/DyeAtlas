@@ -55,6 +55,11 @@ namespace DyeAtlas
             return null;
         }
 
+        // cheating with statics
+        public static double HueImportance = 1.0;
+        public static double SaturationImportance = 1.0;
+        public static double ValueImportance = 1.0;
+
         public int FindClosestIndex(Color clr, bool hsvCompare)
         {
             if (clr.A == 0)
@@ -79,13 +84,18 @@ namespace DyeAtlas
                     double valDiff = Math.Abs(aVal - bVal);
 
                     // weights
-                    hueDiff *= 1.5;
-                    satDiff *= 1.7;
-                    valDiff *= 1.4;
+                    hueDiff *= HueImportance;
+                    satDiff *= SaturationImportance;
+                    valDiff *= ValueImportance;
 
 
+#if true
+                    // just use our HSV comparison directly later
+                    diff = 0;
+#else
                     // RGB compare;  seems to be a good baseline
                     diff = Math.Abs(pe.color.R - clr.R) + Math.Abs(pe.color.G - clr.G) + Math.Abs(pe.color.B - clr.B);
+#endif
 
 
                     // influence with HSV diffs

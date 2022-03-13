@@ -262,12 +262,39 @@ namespace DyeAtlas
 
         private void dithering_CheckedChanged(object sender, EventArgs e)
         {
-            OpenFile(currentfile.Text);
+            Reprocess();
         }
+
+
+        HSVSlidersPopup hsvPopup = null;
 
         private void hsvcompare_CheckedChanged(object sender, EventArgs e)
         {
-            OpenFile(currentfile.Text);
+            if(hsvcompare.Checked)
+            {
+                // if enabling, provide popup
+                hsvPopup = new HSVSlidersPopup(this);
+
+                // manual spawn location for dialog.. right next to button
+                hsvPopup.Location = PointToScreen(hsvcompare.Location + new Size(hsvcompare.Width, 0));
+
+
+                // non-modal;  let it live
+                hsvPopup.Show(this);
+
+            }
+            else
+            {
+                // if destroying, should kill popup
+                if (hsvPopup != null)
+                {
+                    hsvPopup.Close();
+                    hsvPopup.Dispose();
+                    hsvPopup = null;
+                }
+            }
+
+            Reprocess();
         }
 
         private void savePNTButton_Click(object sender, EventArgs e)
@@ -318,7 +345,7 @@ namespace DyeAtlas
 
         private void resolution_TextChanged(object sender, EventArgs e)
         {
-            OpenFile(currentfile.Text);
+            Reprocess();
         }
 
         private void mypaintingsbrowse_Click(object sender, EventArgs e)
@@ -347,14 +374,20 @@ namespace DyeAtlas
             // invalidate palette
             palette = null;
 
+            Reprocess();
+        }
+
+        public void Reprocess()
+        {
+            // reload current file
             OpenFile(currentfile.Text);
         }
 
 
         #region RGB<->HSV
+        // https://stackoverflow.com/questions/359612/how-to-convert-rgb-color-to-hsv
         public static class ColorConversion
         {
-            // https://stackoverflow.com/questions/359612/how-to-convert-rgb-color-to-hsv
             public static void ColorToHSV(Color color, out double hue, out double saturation, out double value)
             {
                 int max = Math.Max(color.R, Math.Max(color.G, color.B));
@@ -413,20 +446,5 @@ namespace DyeAtlas
             }
         }
         #endregion
-
-        private void hsvcompareButton_Click(object sender, EventArgs e)
-        { 
-            HSVSlidersPopup popup = new HSVSlidersPopup(this);
-
-            // manual spawn location for dialog.. right next to button
-            popup.Location = PointToScreen(hsvcompareButton.Location + new Size(hsvcompareButton.Width, 0));
-
-
-            // kill the button;  it will re-enable when they close popup
-            hsvcompareButton.Enabled = false;
-
-            // non-modal;  let it live
-            popup.Show(this);
-        }
     }
 }

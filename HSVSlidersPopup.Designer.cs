@@ -28,29 +28,42 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.hueTrack = new System.Windows.Forms.TrackBar();
+            this.hueLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.hueTrack)).BeginInit();
             this.SuspendLayout();
             // 
-            // trackBar1
+            // hueTrack
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.hueTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(12, 12);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(326, 45);
-            this.trackBar1.SmallChange = 5;
-            this.trackBar1.TabIndex = 0;
-            this.trackBar1.TickFrequency = 5;
+            this.hueTrack.LargeChange = 10;
+            this.hueTrack.Location = new System.Drawing.Point(12, 25);
+            this.hueTrack.Maximum = 100;
+            this.hueTrack.Minimum = -100;
+            this.hueTrack.Name = "hueTrack";
+            this.hueTrack.Size = new System.Drawing.Size(523, 45);
+            this.hueTrack.SmallChange = 5;
+            this.hueTrack.TabIndex = 0;
+            this.hueTrack.TickFrequency = 5;
+            this.hueTrack.Scroll += new System.EventHandler(this.hueTrack_Scroll);
+            // 
+            // hueLabel
+            // 
+            this.hueLabel.AutoSize = true;
+            this.hueLabel.Location = new System.Drawing.Point(12, 9);
+            this.hueLabel.Name = "hueLabel";
+            this.hueLabel.Size = new System.Drawing.Size(35, 13);
+            this.hueLabel.TabIndex = 1;
+            this.hueLabel.Text = "label1";
             // 
             // HSVSlidersPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 155);
-            this.Controls.Add(this.trackBar1);
+            this.ClientSize = new System.Drawing.Size(547, 221);
+            this.Controls.Add(this.hueLabel);
+            this.Controls.Add(this.hueTrack);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -58,8 +71,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "HSV Sliders";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.HSVSlidersPopup_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.Load += new System.EventHandler(this.HSVSlidersPopup_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.hueTrack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -67,6 +80,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar hueTrack;
+        private System.Windows.Forms.Label hueLabel;
     }
 }
