@@ -96,9 +96,10 @@ namespace DyeAtlas
                     diff = Math.Abs(pe.color.R - clr.R) + Math.Abs(pe.color.G - clr.G) + Math.Abs(pe.color.B - clr.B);
 
                     // weights (based around 0 because we have a RGB already)
-                    hueDiff *= HueImportance;
-                    satDiff *= SaturationImportance;
-                    valDiff *= ValueImportance;
+                    double weightScale = 6.0;
+                    hueDiff *= HueImportance * weightScale;
+                    satDiff *= SaturationImportance * weightScale;
+                    valDiff *= ValueImportance * weightScale;
 #endif
 
 
