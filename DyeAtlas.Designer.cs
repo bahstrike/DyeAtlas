@@ -191,9 +191,9 @@
             this.hsvcompare.AutoSize = true;
             this.hsvcompare.Location = new System.Drawing.Point(333, 119);
             this.hsvcompare.Name = "hsvcompare";
-            this.hsvcompare.Size = new System.Drawing.Size(92, 17);
+            this.hsvcompare.Size = new System.Drawing.Size(78, 17);
             this.hsvcompare.TabIndex = 14;
-            this.hsvcompare.Text = "HSV compare";
+            this.hsvcompare.Text = "tune colors";
             this.hsvcompare.UseVisualStyleBackColor = true;
             this.hsvcompare.CheckedChanged += new System.EventHandler(this.hsvcompare_CheckedChanged);
             // 
@@ -244,7 +244,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button openfolder;
         private System.Windows.Forms.ComboBox gamechoice;
-        private System.Windows.Forms.CheckBox hsvcompare;
+        public System.Windows.Forms.CheckBox hsvcompare;
     }
 }
 

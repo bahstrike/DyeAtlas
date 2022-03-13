@@ -30,7 +30,13 @@
         {
             this.hueTrack = new System.Windows.Forms.TrackBar();
             this.hueLabel = new System.Windows.Forms.Label();
+            this.satLabel = new System.Windows.Forms.Label();
+            this.satTrack = new System.Windows.Forms.TrackBar();
+            this.valLabel = new System.Windows.Forms.Label();
+            this.valTrack = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.hueTrack)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.satTrack)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.valTrack)).BeginInit();
             this.SuspendLayout();
             // 
             // hueTrack
@@ -46,7 +52,7 @@
             this.hueTrack.SmallChange = 5;
             this.hueTrack.TabIndex = 0;
             this.hueTrack.TickFrequency = 5;
-            this.hueTrack.Scroll += new System.EventHandler(this.hueTrack_Scroll);
+            this.hueTrack.Scroll += new System.EventHandler(this.Track_Scroll);
             // 
             // hueLabel
             // 
@@ -57,11 +63,63 @@
             this.hueLabel.TabIndex = 1;
             this.hueLabel.Text = "label1";
             // 
+            // satLabel
+            // 
+            this.satLabel.AutoSize = true;
+            this.satLabel.Location = new System.Drawing.Point(12, 70);
+            this.satLabel.Name = "satLabel";
+            this.satLabel.Size = new System.Drawing.Size(35, 13);
+            this.satLabel.TabIndex = 3;
+            this.satLabel.Text = "label1";
+            // 
+            // satTrack
+            // 
+            this.satTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.satTrack.LargeChange = 10;
+            this.satTrack.Location = new System.Drawing.Point(12, 86);
+            this.satTrack.Maximum = 100;
+            this.satTrack.Minimum = -100;
+            this.satTrack.Name = "satTrack";
+            this.satTrack.Size = new System.Drawing.Size(523, 45);
+            this.satTrack.SmallChange = 5;
+            this.satTrack.TabIndex = 2;
+            this.satTrack.TickFrequency = 5;
+            this.satTrack.Scroll += new System.EventHandler(this.Track_Scroll);
+            // 
+            // valLabel
+            // 
+            this.valLabel.AutoSize = true;
+            this.valLabel.Location = new System.Drawing.Point(12, 131);
+            this.valLabel.Name = "valLabel";
+            this.valLabel.Size = new System.Drawing.Size(35, 13);
+            this.valLabel.TabIndex = 5;
+            this.valLabel.Text = "label1";
+            // 
+            // valTrack
+            // 
+            this.valTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.valTrack.LargeChange = 10;
+            this.valTrack.Location = new System.Drawing.Point(12, 147);
+            this.valTrack.Maximum = 100;
+            this.valTrack.Minimum = -100;
+            this.valTrack.Name = "valTrack";
+            this.valTrack.Size = new System.Drawing.Size(523, 45);
+            this.valTrack.SmallChange = 5;
+            this.valTrack.TabIndex = 4;
+            this.valTrack.TickFrequency = 5;
+            this.valTrack.Scroll += new System.EventHandler(this.Track_Scroll);
+            // 
             // HSVSlidersPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(547, 221);
+            this.ClientSize = new System.Drawing.Size(547, 188);
+            this.Controls.Add(this.valLabel);
+            this.Controls.Add(this.valTrack);
+            this.Controls.Add(this.satLabel);
+            this.Controls.Add(this.satTrack);
             this.Controls.Add(this.hueLabel);
             this.Controls.Add(this.hueTrack);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -70,9 +128,12 @@
             this.Name = "HSVSlidersPopup";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "HSV Sliders";
+            this.Text = "Tune Colors";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HSVSlidersPopup_FormClosing);
             this.Load += new System.EventHandler(this.HSVSlidersPopup_Load);
             ((System.ComponentModel.ISupportInitialize)(this.hueTrack)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.satTrack)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.valTrack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -82,5 +143,9 @@
 
         private System.Windows.Forms.TrackBar hueTrack;
         private System.Windows.Forms.Label hueLabel;
+        private System.Windows.Forms.Label satLabel;
+        private System.Windows.Forms.TrackBar satTrack;
+        private System.Windows.Forms.Label valLabel;
+        private System.Windows.Forms.TrackBar valTrack;
     }
 }

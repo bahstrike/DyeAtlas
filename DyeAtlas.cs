@@ -289,7 +289,6 @@ namespace DyeAtlas
                 if (hsvPopup != null)
                 {
                     hsvPopup.Close();
-                    hsvPopup.Dispose();
                     hsvPopup = null;
                 }
             }
