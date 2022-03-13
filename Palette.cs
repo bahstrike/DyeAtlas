@@ -55,7 +55,7 @@ namespace DyeAtlas
             return null;
         }
 
-        public int FindClosestIndex(Color clr)
+        public int FindClosestIndex(Color clr, bool hsvCompare)
         {
             if (clr.A == 0)
                 return 0;
@@ -64,7 +64,36 @@ namespace DyeAtlas
             int closestDiff = 99999;
             foreach (PaletteEntry pe in entries)
             {
-                int diff = Math.Abs(pe.color.R - clr.R) + Math.Abs(pe.color.G - clr.G) + Math.Abs(pe.color.B - clr.B);
+                int diff;
+
+                if (hsvCompare)
+                {
+                    double aHue, aSat, aVal;
+                    double bHue, bSat, bVal;
+                    DyeAtlas.ColorConversion.ColorToHSV(pe.color, out aHue, out aSat, out aVal);
+                    DyeAtlas.ColorConversion.ColorToHSV(clr, out bHue, out bSat, out bVal);
+
+
+                    double hueDiff = DyeAtlas.AngleDiff.distance(aHue, bHue) / 180.0;
+                    double satDiff = Math.Abs(aSat - bSat);
+                    double valDiff = Math.Abs(aVal - bVal);
+
+                    // weights
+                    hueDiff *= 1.0;
+                    satDiff *= 1.0;
+                    valDiff *= 1.0;
+
+
+                    //quantize, i guess
+                    diff = (int)Math.Round(hueDiff * 100.0) +
+                        (int)Math.Round(satDiff * 100.0) +
+                        (int)Math.Round(valDiff * 100.0);
+                }
+                else
+                {
+                    // RGB compare
+                    diff = Math.Abs(pe.color.R - clr.R) + Math.Abs(pe.color.G - clr.G) + Math.Abs(pe.color.B - clr.B);
+                }
 
                 if (diff < closestDiff)
                 {

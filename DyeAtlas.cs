@@ -111,7 +111,7 @@ namespace DyeAtlas
 
                 if(Path.GetExtension(file).Equals(".pnt", StringComparison.InvariantCultureIgnoreCase))//IsFilePNT(file))
                 {
-                    PNTImage pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked);
+                    PNTImage pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked, hsvcompare.Checked);
 
                     pnt.Save(file);
                 }else
@@ -206,7 +206,7 @@ namespace DyeAtlas
                                 bmp = newBmp;
                             }
 
-                            pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked);
+                            pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked, hsvcompare.Checked);
                         }
                         break;
                 }
@@ -261,6 +261,11 @@ namespace DyeAtlas
         }
 
         private void dithering_CheckedChanged(object sender, EventArgs e)
+        {
+            OpenFile(currentfile.Text);
+        }
+
+        private void hsvcompare_CheckedChanged(object sender, EventArgs e)
         {
             OpenFile(currentfile.Text);
         }
@@ -344,5 +349,69 @@ namespace DyeAtlas
 
             OpenFile(currentfile.Text);
         }
+
+
+        #region RGB<->HSV
+        public static class ColorConversion
+        {
+            // https://stackoverflow.com/questions/359612/how-to-convert-rgb-color-to-hsv
+            public static void ColorToHSV(Color color, out double hue, out double saturation, out double value)
+            {
+                int max = Math.Max(color.R, Math.Max(color.G, color.B));
+                int min = Math.Min(color.R, Math.Min(color.G, color.B));
+
+                hue = color.GetHue();
+                saturation = (max == 0) ? 0 : 1d - (1d * min / max);
+                value = max / 255d;
+            }
+
+            public static Color ColorFromHSV(double hue, double saturation, double value)
+            {
+                int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+                double f = hue / 60 - Math.Floor(hue / 60);
+
+                value = value * 255;
+                int v = Convert.ToInt32(value);
+                int p = Convert.ToInt32(value * (1 - saturation));
+                int q = Convert.ToInt32(value * (1 - f * saturation));
+                int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+
+                if (hi == 0)
+                    return Color.FromArgb(255, v, t, p);
+                else if (hi == 1)
+                    return Color.FromArgb(255, q, v, p);
+                else if (hi == 2)
+                    return Color.FromArgb(255, p, v, t);
+                else if (hi == 3)
+                    return Color.FromArgb(255, p, q, v);
+                else if (hi == 4)
+                    return Color.FromArgb(255, t, p, v);
+                else
+                    return Color.FromArgb(255, v, p, q);
+            }
+        }
+        #endregion
+
+        #region AngleDiff
+        public static class AngleDiff
+        {
+            //https://stackoverflow.com/questions/7570808/how-do-i-calculate-the-difference-of-two-angle-measures
+            /**
+            * Shortest distance (angular) between two angles.
+            * It will be in range [0, 180].
+            */
+            public static int distance(int alpha, int beta)
+            {
+                int phi = Math.Abs(beta - alpha) % 360;       // This is either the distance or 360 - distance
+                int distance = phi > 180 ? 360 - phi : phi;
+                return distance;
+            }
+
+            public static double distance(double alpha, double beta)
+            {
+                return (double)distance((int)Math.Round(alpha), (int)Math.Round(beta));
+            }
+        }
+        #endregion
     }
 }

@@ -26,7 +26,7 @@ namespace DyeAtlas
             palette = _palette;
         }
 
-        public static PNTImage GenerateFromBitmap(Palette pal, Bitmap bmp, bool dither)
+        public static PNTImage GenerateFromBitmap(Palette pal, Bitmap bmp, bool dither, bool hsvCompare)
         {
             PNTImage pnt = new PNTImage(pal);
             pnt.version = 1;
@@ -43,7 +43,7 @@ namespace DyeAtlas
                 for (int x = 0; x < pnt.width; x++)
                 {
                     WorkColor clr = scratch.GetPixel(x, y);
-                    pnt.SetPixel(x, y, clr);
+                    pnt.SetPixel(x, y, clr, hsvCompare);
 
                     // if transparent, then no further processing
                     if (clr.Transparent)
@@ -125,12 +125,12 @@ namespace DyeAtlas
             return palette.Get(bits[x + y * width]);
         }
 
-        public void SetPixel(int x, int y, Color clr)
+        public void SetPixel(int x, int y, Color clr, bool hsvCompare)
         {
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
 
-            bits[x + y * width] = (byte)palette.FindClosestIndex(clr);
+            bits[x + y * width] = (byte)palette.FindClosestIndex(clr, hsvCompare);
         }
 
         public Bitmap GenerateBitmap()

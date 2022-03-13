@@ -41,6 +41,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.openfolder = new System.Windows.Forms.Button();
             this.gamechoice = new System.Windows.Forms.ComboBox();
+            this.hsvcompare = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -185,12 +186,26 @@
             this.gamechoice.TabIndex = 13;
             this.gamechoice.SelectedIndexChanged += new System.EventHandler(this.gamechoice_SelectedIndexChanged);
             // 
+            // hsvcompare
+            // 
+            this.hsvcompare.AutoSize = true;
+            this.hsvcompare.Checked = true;
+            this.hsvcompare.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.hsvcompare.Location = new System.Drawing.Point(333, 119);
+            this.hsvcompare.Name = "hsvcompare";
+            this.hsvcompare.Size = new System.Drawing.Size(92, 17);
+            this.hsvcompare.TabIndex = 14;
+            this.hsvcompare.Text = "HSV compare";
+            this.hsvcompare.UseVisualStyleBackColor = true;
+            this.hsvcompare.CheckedChanged += new System.EventHandler(this.hsvcompare_CheckedChanged);
+            // 
             // DyeAtlas
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 561);
+            this.Controls.Add(this.hsvcompare);
             this.Controls.Add(this.gamechoice);
             this.Controls.Add(this.openfolder);
             this.Controls.Add(this.label2);
@@ -231,6 +246,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button openfolder;
         private System.Windows.Forms.ComboBox gamechoice;
+        private System.Windows.Forms.CheckBox hsvcompare;
     }
 }
 
