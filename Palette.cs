@@ -27,6 +27,7 @@ namespace DyeAtlas
                     int.Parse(parts[2].Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
                     int.Parse(parts[2].Substring(5, 2), System.Globalization.NumberStyles.HexNumber)
                     );
+                DyeAtlas.ColorConversion.ColorToHSV(pe.color, out pe.h, out pe.s, out pe.v);
                 pal.entries.Add(pe);
             }
 
@@ -41,6 +42,9 @@ namespace DyeAtlas
             public int index;
             public string name;
             public Color color;
+
+            // HSV color
+            public double h, s, v;//precached for performance
         }
 
         public Color? Get(int index)
@@ -60,6 +64,16 @@ namespace DyeAtlas
         public static double SaturationImportance = 0.0;
         public static double ValueImportance = 0.0;
 
+
+        private void RegenerateHSVCache()
+        {
+            foreach (PaletteEntry pe in entries)
+            {
+                double aHue, aSat, aVal;
+                DyeAtlas.ColorConversion.ColorToHSV(pe.color, out aHue, out aSat, out aVal);
+            }
+        }
+
         public int FindClosestIndex(Color clr, bool hsvCompare)
         {
             if (clr.A == 0)
@@ -73,15 +87,13 @@ namespace DyeAtlas
 
                 if (hsvCompare)
                 {
-                    double aHue, aSat, aVal;
                     double bHue, bSat, bVal;
-                    DyeAtlas.ColorConversion.ColorToHSV(pe.color, out aHue, out aSat, out aVal);
                     DyeAtlas.ColorConversion.ColorToHSV(clr, out bHue, out bSat, out bVal);
 
 
-                    double hueDiff = DyeAtlas.AngleDiff.distance(aHue, bHue) / 180.0;
-                    double satDiff = Math.Abs(aSat - bSat);
-                    double valDiff = Math.Abs(aVal - bVal);
+                    double hueDiff = DyeAtlas.AngleDiff.distance(pe.h, bHue) / 180.0;
+                    double satDiff = Math.Abs(pe.s - bSat);
+                    double valDiff = Math.Abs(pe.v - bVal);
 
 #if false
                     // just use our HSV comparison directly later

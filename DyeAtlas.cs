@@ -143,6 +143,13 @@ namespace DyeAtlas
             }
         }
 
+
+        // for caching current bitmap  (not pnt)
+        private string lastFilename = null;
+        private DateTime lastFileWrite = new DateTime();
+        private Bitmap lastBitmap = null;
+
+
         public void OpenFile(string file)
         {
             if (string.IsNullOrEmpty(file) || !File.Exists(file))
@@ -173,40 +180,64 @@ namespace DyeAtlas
                     case ".tga":
                     case ".tiff":
                         {
-                            Bitmap bmp = (Bitmap)Bitmap.FromFile(file);
+                            DateTime modifyTime = new FileInfo(file).LastWriteTimeUtc;
 
-                            // powers-of-2 automatic rescale
-                            int newWidth = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Width) / Math.Log(2.0)));
-                            int newHeight = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Height) / Math.Log(2.0)));
-
-                            // clamp to allowable export dimensions (assumed power-of-2)
-                            newWidth = Math.Min(ExportDimensions.Width, newWidth);
-                            newHeight = Math.Min(ExportDimensions.Height, newHeight);
-
-                            // hold onto yerr hats, its time to rescale!
-                            if (newWidth != bmp.Width || newHeight != bmp.Height)
+                            // do we already have a file open?
+                            if (!string.IsNullOrEmpty(lastFilename))
                             {
-                                Bitmap newBmp = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
-                                newBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
-
-                                using (Graphics gfx = Graphics.FromImage(newBmp))
+                                // check if different/modified..  if so then invalidate our existing entry
+                                if (!string.Equals(file, lastFilename, StringComparison.InvariantCultureIgnoreCase) || !modifyTime.Equals(lastFileWrite))
                                 {
-                                    gfx.CompositingMode = CompositingMode.SourceCopy;
-                                    gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
-                                    gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                                    using (ImageAttributes wrapMode = new ImageAttributes())
-                                    {
-                                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                                        gfx.DrawImage(bmp, new Rectangle(0, 0, newWidth, newHeight), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrapMode);
-                                    }
+                                    lastFilename = null;
+                                    lastFileWrite = new DateTime();
+                                    lastBitmap = null;
                                 }
-
-                                bmp.Dispose();
-                                bmp = newBmp;
                             }
 
-                            pnt = PNTImage.GenerateFromBitmap(palette, bmp, dithering.Checked, hsvcompare.Checked);
+
+                            // only load if we need to
+                            if (lastBitmap == null)
+                            {
+                                Bitmap bmp = (Bitmap)Bitmap.FromFile(file);
+
+                                // powers-of-2 automatic rescale
+                                int newWidth = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Width) / Math.Log(2.0)));
+                                int newHeight = (int)Math.Pow(2.0, Math.Ceiling(Math.Log((double)bmp.Height) / Math.Log(2.0)));
+
+                                // clamp to allowable export dimensions (assumed power-of-2)
+                                newWidth = Math.Min(ExportDimensions.Width, newWidth);
+                                newHeight = Math.Min(ExportDimensions.Height, newHeight);
+
+                                // hold onto yerr hats, its time to rescale!
+                                if (newWidth != bmp.Width || newHeight != bmp.Height)
+                                {
+                                    Bitmap newBmp = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
+                                    newBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
+
+                                    using (Graphics gfx = Graphics.FromImage(newBmp))
+                                    {
+                                        gfx.CompositingMode = CompositingMode.SourceCopy;
+                                        gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
+                                        gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                                        using (ImageAttributes wrapMode = new ImageAttributes())
+                                        {
+                                            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                                            gfx.DrawImage(bmp, new Rectangle(0, 0, newWidth, newHeight), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrapMode);
+                                        }
+                                    }
+
+                                    bmp.Dispose();
+                                    bmp = newBmp;
+                                }
+
+
+                                lastFilename = file;
+                                lastFileWrite = modifyTime;
+                                lastBitmap = bmp;
+                            }
+
+                            pnt = PNTImage.GenerateFromBitmap(palette, lastBitmap, dithering.Checked, hsvcompare.Checked);
                         }
                         break;
                 }

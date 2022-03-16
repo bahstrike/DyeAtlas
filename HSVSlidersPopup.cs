@@ -21,7 +21,8 @@ namespace DyeAtlas
             InitializeComponent();
         }
 
-        void UpdateValues(bool reprocess=true)
+        DateTime? ValuesUpdatedTime = null;
+        void UpdateValues()
         {
             // cheating with static values lol
             Palette.HueImportance = (double)hueTrack.Value / (double)(hueTrack.Maximum - hueTrack.Minimum);
@@ -35,14 +36,7 @@ namespace DyeAtlas
             satLabel.Text = $"Saturation Importance: {Palette.SaturationImportance.ToString("0.0")}";
             valLabel.Text = $"Brightness Importance: {Palette.ValueImportance.ToString("0.0")}";
 
-
-            // maybe reprocess
-            if (reprocess)
-            {
-                Update();// flush before slow
-
-                dyeAtlas.Reprocess();
-            }
+            ValuesUpdatedTime = DateTime.Now;
         }
 
         public bool updating = false;
@@ -57,17 +51,12 @@ namespace DyeAtlas
 
 
             // just update labels
-            UpdateValues(false);
+            UpdateValues();
         }
 
         private void HSVSlidersPopup_FormClosing(object sender, FormClosingEventArgs e)
         {
             dyeAtlas.hsvcompare.Checked = false;// we dont wanna use HSV anymore
-        }
-
-        private void Track_Scroll(object sender, EventArgs e)
-        {
-            UpdateValues(false);
         }
 
         private void Track_ValueChanged(object sender, EventArgs e)
@@ -87,6 +76,15 @@ namespace DyeAtlas
             updating = false;
 
             UpdateValues();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(ValuesUpdatedTime.HasValue && DateTime.Now.Subtract(ValuesUpdatedTime.Value).TotalMilliseconds > 350)
+            {
+                dyeAtlas.Reprocess();
+                ValuesUpdatedTime = null;
+            }
         }
     }
 }

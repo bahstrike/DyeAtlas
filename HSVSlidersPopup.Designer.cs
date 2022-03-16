@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.hueTrack = new System.Windows.Forms.TrackBar();
             this.hueLabel = new System.Windows.Forms.Label();
             this.satLabel = new System.Windows.Forms.Label();
@@ -35,6 +36,7 @@
             this.valLabel = new System.Windows.Forms.Label();
             this.valTrack = new System.Windows.Forms.TrackBar();
             this.resetButton = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.hueTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.satTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.valTrack)).BeginInit();
@@ -53,7 +55,6 @@
             this.hueTrack.SmallChange = 5;
             this.hueTrack.TabIndex = 0;
             this.hueTrack.TickFrequency = 5;
-            this.hueTrack.Scroll += new System.EventHandler(this.Track_Scroll);
             this.hueTrack.ValueChanged += new System.EventHandler(this.Track_ValueChanged);
             // 
             // hueLabel
@@ -87,7 +88,6 @@
             this.satTrack.SmallChange = 5;
             this.satTrack.TabIndex = 2;
             this.satTrack.TickFrequency = 5;
-            this.satTrack.Scroll += new System.EventHandler(this.Track_Scroll);
             this.satTrack.ValueChanged += new System.EventHandler(this.Track_ValueChanged);
             // 
             // valLabel
@@ -112,7 +112,6 @@
             this.valTrack.SmallChange = 5;
             this.valTrack.TabIndex = 4;
             this.valTrack.TickFrequency = 5;
-            this.valTrack.Scroll += new System.EventHandler(this.Track_Scroll);
             this.valTrack.ValueChanged += new System.EventHandler(this.Track_ValueChanged);
             // 
             // resetButton
@@ -125,6 +124,12 @@
             this.resetButton.Text = "reset";
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 50;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // HSVSlidersPopup
             // 
@@ -164,5 +169,6 @@
         private System.Windows.Forms.Label valLabel;
         private System.Windows.Forms.TrackBar valTrack;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Timer timer1;
     }
 }
