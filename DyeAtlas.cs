@@ -147,17 +147,17 @@ namespace DyeAtlas
         // for caching current bitmap  (not pnt)
         private string lastFilename = null;
         private DateTime lastFileWrite = new DateTime();
+        private Size lastOutputSize = new Size(0, 0);
         private Bitmap lastBitmap = null;
 
 
-        public void OpenFile(string file)
+        public void OpenFile(string file, bool autodetectResolution=true)
         {
             if (string.IsNullOrEmpty(file) || !File.Exists(file))
                 return;
 
             try
             {
-
                 PNTImage pnt = null;
 
                 switch (Path.GetExtension(file).ToLowerInvariant())
@@ -165,11 +165,14 @@ namespace DyeAtlas
                     case ".pnt":
                         pnt = PNTImage.LoadPNT(palette, file);
 
-                        // autoselect resolution
-                        if (pnt.width >= 256)
-                            resolution.SelectedIndex = 1;//256x256
-                        else
-                            resolution.SelectedIndex = 0;//128x128   (shrug)
+                        if (autodetectResolution)
+                        {
+                            // autoselect resolution
+                            if (pnt.width >= 256)
+                                resolution.SelectedIndex = 1;//256x256
+                            else
+                                resolution.SelectedIndex = 0;//128x128   (shrug)
+                        }
                         break;
 
                     case ".bmp":
@@ -186,10 +189,13 @@ namespace DyeAtlas
                             if (!string.IsNullOrEmpty(lastFilename))
                             {
                                 // check if different/modified..  if so then invalidate our existing entry
-                                if (!string.Equals(file, lastFilename, StringComparison.InvariantCultureIgnoreCase) || !modifyTime.Equals(lastFileWrite))
+                                if (!string.Equals(file, lastFilename, StringComparison.InvariantCultureIgnoreCase) ||
+                                    !modifyTime.Equals(lastFileWrite) ||
+                                    !ExportDimensions.Equals(lastOutputSize)/*hack to force reload if output dimensions change*/)
                                 {
                                     lastFilename = null;
                                     lastFileWrite = new DateTime();
+                                    lastOutputSize = new Size(0, 0);
                                     lastBitmap = null;
                                 }
                             }
@@ -234,6 +240,7 @@ namespace DyeAtlas
 
                                 lastFilename = file;
                                 lastFileWrite = modifyTime;
+                                lastOutputSize = bmp.Size;
                                 lastBitmap = bmp;
                             }
 
@@ -250,7 +257,9 @@ namespace DyeAtlas
                 }
 
                 currentfile.Text = file;
-                resolution.Text = $"{pnt.width}x{pnt.height}";
+
+                if(autodetectResolution)
+                    resolution.Text = $"{pnt.width}x{pnt.height}";
 
                 preview.Image = pnt.GenerateBitmap();
 
@@ -262,6 +271,10 @@ namespace DyeAtlas
             catch(Exception e)
             {
                 MessageBox.Show(e.Message);
+            }
+            finally
+            {
+
             }
 
         }
@@ -410,7 +423,7 @@ namespace DyeAtlas
         public void Reprocess()
         {
             // reload current file
-            OpenFile(currentfile.Text);
+            OpenFile(currentfile.Text, false);
         }
 
 
