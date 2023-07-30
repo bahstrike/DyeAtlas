@@ -489,5 +489,123 @@ namespace DyeAtlas
             }
         }
         #endregion
+
+        private void batchToImageButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderIn = new FolderBrowserDialog();
+
+            folderIn.Description = "Input: select a folder containing .PNT files";
+            if (Directory.Exists(MyPaintingsPath))
+                folderIn.SelectedPath = MyPaintingsPath;
+            folderIn.ShowNewFolderButton = false;
+
+            if (folderIn.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (!Directory.Exists(folderIn.SelectedPath))
+                return;
+
+
+            List<string> inputFiles = new List<string>();
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.pnt"));
+
+            if(inputFiles.Count == 0)
+            {
+                MessageBox.Show("No .PNT files found in this directory!");
+                return;
+            }
+
+
+
+            FolderBrowserDialog folderOut = new FolderBrowserDialog();
+
+            folderOut.Description = "Output: select a folder to store images";
+            folderOut.ShowNewFolderButton = true;
+
+            if (folderOut.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Enabled = false;
+
+                foreach (string inFile in inputFiles)
+                {
+                    string outFile = Path.Combine(folderOut.SelectedPath, Path.GetFileNameWithoutExtension(inFile) + ".png");
+
+                    OpenFile(inFile);
+                    Application.DoEvents();
+                    SaveFile(outFile);
+                }
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                Enabled = true;
+            }
+        }
+
+        private void batchToPNTButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderIn = new FolderBrowserDialog();
+
+            folderIn.Description = "Input: select a folder containing image files";
+            folderIn.ShowNewFolderButton = false;
+
+            if (folderIn.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (!Directory.Exists(folderIn.SelectedPath))
+                return;
+
+
+            List<string> inputFiles = new List<string>();
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.jpg"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.jpeg"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.bmp"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.png"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.gif"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.tga"));
+            inputFiles.AddRange(Directory.GetFiles(folderIn.SelectedPath, "*.tiff"));
+
+            if (inputFiles.Count == 0)
+            {
+                MessageBox.Show("No image files found in this directory!");
+                return;
+            }
+
+
+
+            FolderBrowserDialog folderOut = new FolderBrowserDialog();
+
+            folderOut.Description = "Output: select a folder to store .PNT files";
+            if (Directory.Exists(MyPaintingsPath))
+                folderOut.SelectedPath = MyPaintingsPath;
+            folderOut.ShowNewFolderButton = true;
+
+            if (folderOut.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Enabled = false;
+
+                foreach (string inFile in inputFiles)
+                {
+                    string outFile = Path.Combine(folderOut.SelectedPath, Path.GetFileNameWithoutExtension(inFile) + ".pnt");
+
+                    OpenFile(inFile);
+                    Application.DoEvents();
+                    SaveFile(outFile);
+                }
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                Enabled = true;
+            }
+        }
     }
 }

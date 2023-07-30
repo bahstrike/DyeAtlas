@@ -42,6 +42,8 @@
             this.openfolder = new System.Windows.Forms.Button();
             this.gamechoice = new System.Windows.Forms.ComboBox();
             this.hsvcompare = new System.Windows.Forms.CheckBox();
+            this.batchToImageButton = new System.Windows.Forms.Button();
+            this.batchToPNTButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,9 +53,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.preview.Location = new System.Drawing.Point(12, 168);
+            this.preview.Location = new System.Drawing.Point(12, 215);
             this.preview.Name = "preview";
-            this.preview.Size = new System.Drawing.Size(450, 381);
+            this.preview.Size = new System.Drawing.Size(450, 334);
             this.preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.preview.TabIndex = 0;
             this.preview.TabStop = false;
@@ -147,7 +149,7 @@
             // 
             this.currentfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.currentfile.Location = new System.Drawing.Point(12, 142);
+            this.currentfile.Location = new System.Drawing.Point(12, 189);
             this.currentfile.Name = "currentfile";
             this.currentfile.ReadOnly = true;
             this.currentfile.Size = new System.Drawing.Size(450, 20);
@@ -156,7 +158,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 126);
+            this.label2.Location = new System.Drawing.Point(12, 173);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 13);
             this.label2.TabIndex = 11;
@@ -197,12 +199,34 @@
             this.hsvcompare.UseVisualStyleBackColor = true;
             this.hsvcompare.CheckedChanged += new System.EventHandler(this.hsvcompare_CheckedChanged);
             // 
+            // batchToImageButton
+            // 
+            this.batchToImageButton.Location = new System.Drawing.Point(224, 119);
+            this.batchToImageButton.Name = "batchToImageButton";
+            this.batchToImageButton.Size = new System.Drawing.Size(100, 50);
+            this.batchToImageButton.TabIndex = 15;
+            this.batchToImageButton.Text = "Batch .PNT to Image";
+            this.batchToImageButton.UseVisualStyleBackColor = true;
+            this.batchToImageButton.Click += new System.EventHandler(this.batchToImageButton_Click);
+            // 
+            // batchToPNTButton
+            // 
+            this.batchToPNTButton.Location = new System.Drawing.Point(118, 119);
+            this.batchToPNTButton.Name = "batchToPNTButton";
+            this.batchToPNTButton.Size = new System.Drawing.Size(100, 50);
+            this.batchToPNTButton.TabIndex = 16;
+            this.batchToPNTButton.Text = "Batch Image to .PNT";
+            this.batchToPNTButton.UseVisualStyleBackColor = true;
+            this.batchToPNTButton.Click += new System.EventHandler(this.batchToPNTButton_Click);
+            // 
             // DyeAtlas
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 561);
+            this.Controls.Add(this.batchToPNTButton);
+            this.Controls.Add(this.batchToImageButton);
             this.Controls.Add(this.hsvcompare);
             this.Controls.Add(this.gamechoice);
             this.Controls.Add(this.openfolder);
@@ -218,7 +242,7 @@
             this.Controls.Add(this.dithering);
             this.Controls.Add(this.preview);
             this.Name = "DyeAtlas";
-            this.Text = "DyeAtlas - BAH 2022";
+            this.Text = "DyeAtlas - BAH 2023";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DyeAtlas_FormClosed);
             this.Load += new System.EventHandler(this.DyeAtlas_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
@@ -245,6 +269,8 @@
         private System.Windows.Forms.Button openfolder;
         private System.Windows.Forms.ComboBox gamechoice;
         public System.Windows.Forms.CheckBox hsvcompare;
+        private System.Windows.Forms.Button batchToImageButton;
+        private System.Windows.Forms.Button batchToPNTButton;
     }
 }
 
